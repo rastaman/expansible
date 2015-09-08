@@ -1,0 +1,74 @@
+package {{package}};
+
+import {{modelPackage}}.*;
+
+import com.wordnik.swagger.annotations.ApiParam;
+
+{{#imports}}import {{import}};
+{{/imports}}
+
+import java.util.List;
+import {{package}}.NotFoundException;
+
+import java.io.InputStream;
+
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
+
+import javax.ws.rs.core.Response;
+import javax.ws.rs.*;
+
+import com.codahale.metrics.annotation.Timed;
+
+@Path("/{{baseName}}")
+@com.wordnik.swagger.annotations.Api(value = "/{{baseName}}", description = "the {{baseName}} API")
+{{#operations}}
+public class {{classname}} {
+
+  private I{{classname}}Service {{classVarName}}Service;
+
+  public I{{classname}}Service get{{classname}}Service() {
+    return {{classVarName}}Service;
+  }
+
+  public void set{{classname}}Service(I{{classname}}Service {{classVarName}}Service) {
+    this.{{classVarName}}Service = {{classVarName}}Service;
+  }
+
+  public interface I{{classname}}Service {
+
+  {{#operation}}
+  public {{#returnContainer}}{{{returnContainer}}}<{{/returnContainer}}{{#returnType}}{{{returnType}}}{{/returnType}}{{^returnType}}void{{/returnType}}{{#returnContainer}}>{{/returnContainer}} {{nickname}}({{#allParams}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}});
+  {{/operation}}
+
+  }
+
+  public {{classname}}(I{{classname}}Service {{classVarName}}Service) {
+    super();
+    this.{{classVarName}}Service = {{classVarName}}Service;
+  }
+
+  {{#operation}}
+  @{{httpMethod}}
+  {{#subresourceOperation}}@Path("{{path}}"){{/subresourceOperation}}
+  {{#hasConsumes}}@Consumes({ {{#consumes}}"{{mediaType}}"{{#hasMore}}, {{/hasMore}}{{/consumes}} }){{/hasConsumes}}
+  {{#hasProduces}}@Produces({ {{#produces}}"{{mediaType}}"{{#hasMore}}, {{/hasMore}}{{/produces}} }){{/hasProduces}}
+  @com.wordnik.swagger.annotations.ApiOperation(value = "{{{summary}}}", notes = "{{{notes}}}", response = {{{returnType}}}.class{{#returnContainer}}, responseContainer = "{{{returnContainer}}}"{{/returnContainer}})
+  @com.wordnik.swagger.annotations.ApiResponses(value = { {{#responses}}
+    @com.wordnik.swagger.annotations.ApiResponse(code = {{{code}}}, message = "{{{message}}}"){{#hasMore}},
+    {{/hasMore}}{{/responses}} })
+  @Timed
+  public Response {{nickname}}({{#allParams}}{{>queryParams}}{{>pathParams}}{{>headerParams}}{{>bodyParams}}{{>formParams}}{{#hasMore}},
+    {{/hasMore}}{{/allParams}})
+      throws NotFoundException {
+    try {
+      return Response.ok().entity({{classVarName}}Service.{{nickname}}({{#allParams}}{{paramName}}{{#hasMore}},
+    {{/hasMore}}{{/allParams}})).build();
+    } catch ( Exception e ) {
+      return Response.serverError().entity(e.getMessage()).build();
+    }
+  }
+
+  {{/operation}}
+}
+{{/operations}}

@@ -1,0 +1,13 @@
+FROM java:8-jre
+
+ENV HOME /root/
+WORKDIR /app/
+
+# dropwizard
+ADD src/main/resources/{{{appShortName}}}.yml /app/
+ADD target/{{{appShortName}}}.jar /app/
+
+# run
+EXPOSE 8080
+ENTRYPOINT [ "java" ]
+CMD ["-jar", "{{{appShortName}}}.jar", "server", "{{{appShortName}}}.yml"]

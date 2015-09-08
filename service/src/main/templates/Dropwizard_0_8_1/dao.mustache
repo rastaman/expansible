@@ -1,0 +1,36 @@
+package {{package}};
+
+{{#imports}}import {{import}};
+{{/imports}}
+
+import java.util.Optional;
+import io.dropwizard.hibernate.AbstractDAO;
+import org.hibernate.SessionFactory;
+
+import javax.inject.Inject;
+import java.util.List;
+{{#models}}
+
+{{#model}}
+public class {{classname}}DAO extends AbstractDAO<{{classname}}> {
+
+    @Inject
+    public {{classname}}DAO(SessionFactory sessionFactory) {
+        super(sessionFactory);
+    }
+
+    public {{classname}} create({{classname}} {{classname}}) {
+        return persist({{classname}});
+    }
+
+    public List<{{classname}}> readAll() {
+        return list(currentSession().createCriteria({{classname}}.class));
+    }
+
+    public Optional<{{classname}}> readById(Long id) {
+        return Optional.ofNullable(get(id));
+    }
+}
+{{/model}}
+{{/models}}
+
