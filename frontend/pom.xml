@@ -17,8 +17,9 @@
 				<groupId>com.github.eirslett</groupId>
 				<artifactId>frontend-maven-plugin</artifactId>
 				<version>0.0.23</version>
+				<executions>
 				<execution>
-					<!-- optional: you don't really need execution ids, but it looks nice 
+					<!-- optional: you don't really need execution ids, but it looks nice
 						in your build log. -->
 					<id>install-node-and-npm</id>
 					<goals>
@@ -29,10 +30,12 @@
 					<configuration>
 						<nodeVersion>v0.12.4</nodeVersion>
 						<npmVersion>1.3.8</npmVersion>
-						<!-- optional: where to download node and npm from. Defaults to http://nodejs.org/dist/ -->
+						<!-- optional: where to download node and npm from. Defaults to http://nodejs.org/dist/
 						<downloadRoot>http://myproxy.example.org/nodejs/dist/</downloadRoot>
+						 -->
 					</configuration>
 				</execution>
+			</executions>
 			</plugin>
 		</plugins>
 	</build>
